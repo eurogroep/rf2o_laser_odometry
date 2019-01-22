@@ -223,7 +223,7 @@ bool CLaserOdometry2D::odometryCalculation(const sensor_msgs::LaserScan& scan)
     calculaterangeDerivativesSurface();
 
     //5. Compute normals
-    //computeNormals();
+    computeNormals();
 
     //6. Compute weights
     computeWeights();
@@ -287,8 +287,9 @@ void CLaserOdometry2D::createImagePyramid()
     {
       for (unsigned int u = 0; u < cols_i; u++)
       {
-        const float dcenter = range_wf(u);
-
+        float dcenter = range_wf(u);
+	if(dcenter ==  std::numeric_limits<float>::infinity())
+		dcenter = std::numeric_limits<float>::quiet_NaN();
         //Inner pixels
         if ((u>1)&&(u<cols_i-2))
         {

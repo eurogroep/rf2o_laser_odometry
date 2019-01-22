@@ -67,12 +67,12 @@ class CLaserOdometry2D
 {
 public:
 
-  using Scalar = float;
+  typedef float Scalar;
 
-  using Pose2d = Eigen::Isometry2d;
-  using Pose3d = Eigen::Isometry3d;
-  using MatrixS31 = Eigen::Matrix<Scalar, 3, 1>;
-  using IncrementCov = Eigen::Matrix<Scalar, 3, 3>;
+  typedef Eigen::Isometry2d Pose2d;
+  typedef Eigen::Isometry3d Pose3d;
+  typedef Eigen::Matrix<Scalar, 3, 1> MatrixS31;
+  typedef Eigen::Matrix<Scalar, 3, 3> IncrementCov;
 
   CLaserOdometry2D();
   virtual ~CLaserOdometry2D() = default;
