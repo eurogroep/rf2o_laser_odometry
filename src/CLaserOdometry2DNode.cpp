@@ -198,6 +198,13 @@ void CLaserOdometry2DNode::LaserCallBack(const sensor_msgs::LaserScan::ConstPtr&
       for (unsigned int i = 0; i<width; i++)
         range_wf(i) = new_scan->ranges[i];
       new_scan_available = true;
+      if( is_initialized() && scan_available() )
+      {
+        //Process odometry estimation
+        odometryCalculation(last_scan);
+        publish();
+        new_scan_available = false; //avoids the possibility to run twice on the same laser scan
+      }
     }
     else
     {
@@ -268,17 +275,6 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "RF2O_LaserOdom");
 
   rf2o::CLaserOdometry2DNode myLaserOdomNode;
-
-  ros::TimerOptions timer_opt;
-  timer_opt.oneshot   = false;
-  timer_opt.autostart = true;
-  timer_opt.callback_queue = ros::getGlobalCallbackQueue();
-  timer_opt.tracked_object = ros::VoidConstPtr();
-
-  timer_opt.callback = boost::bind(&rf2o::CLaserOdometry2DNode::process, &myLaserOdomNode, _1);
-  timer_opt.period   = ros::Rate(myLaserOdomNode.freq).expectedCycleTime();
-
-  ros::Timer rf2o_timer = ros::NodeHandle("~").createTimer(timer_opt);
 
   ros::spin();
 
